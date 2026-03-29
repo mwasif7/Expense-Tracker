@@ -28,7 +28,24 @@
 
         <div class="lp-actions">
             <a href="{{ url_for('register') }}" class="lp-btn">Create free account</a>
-            <a href="#features" class="lp-btn">See how it works</a>
+            <button class="lp-btn" id="open-video-modal">See how it works</button>
+        </div>
+
+        <!-- Video modal -->
+        <div id="video-modal" class="lp-modal" aria-hidden="true">
+            <div class="lp-modal-backdrop"></div>
+            <div class="lp-modal-dialog">
+                <button class="lp-modal-close" id="close-video-modal" aria-label="Close">&times;</button>
+                <div class="lp-modal-video">
+                    <iframe
+                        id="video-iframe"
+                        src=""
+                        data-src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1"
+                        allow="autoplay; encrypted-media"
+                        allowfullscreen>
+                    </iframe>
+                </div>
+            </div>
         </div>
 
         <div class="lp-preview">
@@ -109,4 +126,38 @@
     </div>
 </section>
 
+{% endblock %}
+
+{% block scripts %}
+<script>
+(function () {
+    const modal    = document.getElementById('video-modal');
+    const iframe   = document.getElementById('video-iframe');
+    const backdrop = modal.querySelector('.lp-modal-backdrop');
+
+    function openModal() {
+        iframe.src = iframe.dataset.src;
+        modal.classList.add('lp-modal--open');
+        modal.setAttribute('aria-hidden', 'false');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+        iframe.src = '';
+        modal.classList.remove('lp-modal--open');
+        modal.setAttribute('aria-hidden', 'true');
+        document.body.style.overflow = '';
+    }
+
+    document.getElementById('open-video-modal').addEventListener('click', openModal);
+    document.getElementById('close-video-modal').addEventListener('click', closeModal);
+    backdrop.addEventListener('click', closeModal);
+
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && modal.classList.contains('lp-modal--open')) {
+            closeModal();
+        }
+    });
+})();
+</script>
 {% endblock %}
